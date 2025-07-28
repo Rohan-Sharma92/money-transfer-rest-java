@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: money-transfer-rest-java
+  flyway:
+    locations: classpath:db/migration
+    enabled: true
+  jooq:
+    sql-dialect: POSTGRES
