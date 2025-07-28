@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Currency;
+import java.util.UUID;
 
 @Repository
 public class RecipientRepository {
@@ -23,6 +24,16 @@ public class RecipientRepository {
 
     public Recipient insert(Recipient recipient){
         return dslContext.insertInto(Tables.RECIPIENT).values(recipient).returning().fetchOne(record ->
+                new Recipient(
+                        record.get(RECIPIENT.ID),
+                        record.get(RECIPIENT.NAME),
+                        new Iban(record.get(RECIPIENT.IBAN)),
+                        Currency.getInstance(record.get(RECIPIENT.CURRENCY))
+                ));
+    }
+
+    public Recipient findById(UUID id){
+        return dslContext.selectFrom(Tables.RECIPIENT).where(RECIPIENT.ID.eq(id)).fetchOne(record ->
                 new Recipient(
                         record.get(RECIPIENT.ID),
                         record.get(RECIPIENT.NAME),
